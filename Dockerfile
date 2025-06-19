@@ -22,21 +22,15 @@ RUN docker-php-ext-install pdo_mysql exif pcntl bcmath gd zip
 # Get latest Composer
 COPY --from=composer:2.5 /usr/bin/composer /usr/bin/composer
 
-# Copy dependency definitions
-COPY database/ database/
-COPY composer.json composer.lock ./
+# Copy the entire application source code
+COPY . .
+
 # Install composer dependencies
 RUN composer install --no-interaction --optimize-autoloader --no-dev
-
-# Copy asset dependency definitions
-COPY package.json package-lock.json* ./
 
 # Install and build assets
 RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
 RUN npm run build
-
-# Copy remaining application files
-COPY . .
 
 # Stage 2: Final image for production
 FROM php:8.2-cli-alpine3.18
@@ -47,7 +41,6 @@ RUN apk add --no-cache libpng libzip
 
 # Copy application files and dependencies from builder stage
 COPY --from=builder /app .
-COPY --from=builder /usr/bin/composer /usr/bin/composer
 
 # Set permissions for Laravel
 RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache && \
