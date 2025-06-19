@@ -1,16 +1,15 @@
 # Railway configuration for Laravel
 [build]
-# Railway will automatically detect this is a PHP application
 # Build command will run during the build phase
 buildCommand = "composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist"
 
 [deploy]
-# Run migrations after deployment (uncomment after initial setup)
-startCommand = "php artisan migrate --force"
-
 # Health check settings
-healthcheckPath = "/"
-healthcheckTimeout = 30
+healthcheckPath = "/health"
+healthcheckTimeout = 10
+
+# Start command is now in the Procfile
+startCommand = ""
 
 [env]
 # Basic Laravel configuration
@@ -34,7 +33,7 @@ SESSION_LIFETIME = "120"
 
 # Logging
 LOG_CHANNEL = "stderr"
-LOG_LEVEL = "info"
+LOG_LEVEL = "debug"
 
 # Queue (set to sync by default, can be changed to database/redis)
 QUEUE_CONNECTION = "sync" 
