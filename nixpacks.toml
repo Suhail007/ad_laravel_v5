@@ -22,21 +22,21 @@ cmds = ["php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=
 cmds = ["echo 'Skipping install phase'"]
 
 [phases.build.nixPkgs]
-php = "php82"
-composer = "composer"
-nodejs = "nodejs-18_x"
+php82 = {}
+composer = {}
+nodejs-18_x = {}
 
 [phases.build.nixLibraries]
-libpng = "libpng"
-libjpeg = "libjpeg"
-freetype = "freetype"
-zip = "zip"
+libpng = {}
+libjpeg = {}
+freetype = {}
+zip = {}
 
 [phases.start.nixPkgs]
-php = "php82"
+php82 = {}
 
 [phases.start.nixLibraries]
-libpng = "libpng"
-libjpeg = "libjpeg"
-freetype = "freetype"
-zip = "zip"
+libpng = {}
+libjpeg = {}
+freetype = {}
+zip = {}
