@@ -1,19 +1,16 @@
+# Railway configuration for Laravel
 [build]
 # Railway will automatically detect this is a PHP application
 # Build command will run during the build phase
 buildCommand = "composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist"
 
 [deploy]
-# Temporarily disable migrations during initial deployment
-# preDeployCommand = "php artisan migrate --force"
-
-# Add debug commands
-preDeployCommand = "echo 'Starting pre-deploy...' && php --version && composer --version"
+# Run migrations after deployment (uncomment after initial setup)
+# startCommand = "php artisan migrate --force"
 
 # Health check settings
 healthcheckPath = "/"
 healthcheckTimeout = 30
-
 
 [env]
 # Basic Laravel configuration
@@ -40,13 +37,4 @@ LOG_CHANNEL = "stderr"
 LOG_LEVEL = "info"
 
 # Queue (set to sync by default, can be changed to database/redis)
-QUEUE_CONNECTION = "sync"
-
-# Required PHP extensions
-PHP_EXTENSIONS = "bcmath ctype fileinfo json mbstring openssl pdo pdo_mysql tokenizer xml gd"
-
-# PHP settings
-PHP_INI_SCAN_DIR = "./php.ini"
-PHP_MEMORY_LIMIT = "256M"
-PHP_POST_MAX_SIZE = "100M"
-PHP_UPLOAD_MAX_FILESIZE = "100M" 
+QUEUE_CONNECTION = "sync" 
