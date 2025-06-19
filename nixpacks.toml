@@ -1,0 +1,48 @@
+[phases.setup]
+cmds = [
+    "apt-get update",
+    "apt-get install -y --no-install-recommends libpng-dev libjpeg-dev libfreetype6-dev libzip-dev unzip"
+]
+
+[phases.build]
+cmds = [
+    "composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist",
+    "php artisan config:cache",
+    "php artisan route:cache",
+    "php artisan view:cache",
+    "php artisan storage:link"
+]
+
+[phases.start]
+cmds = ["php artisan serve --host=0.0.0.0 --port=$PORT"]
+
+[phases.install]
+cmds = ["echo 'Skipping install phase'"]
+
+[phases.build]
+nixPkgs = [
+    'php82',
+    'php82-curl',
+    'php82-mbstring',
+    'php82-xml',
+    'php82-zip',
+    'php82-gd',
+    'php82-pdo_mysql',
+    'composer',
+    'nodejs-18_x'
+]
+
+[phases.build.nixLibraries]
+libpng = "libpng"
+libjpeg = "libjpeg"
+freetype = "freetype"
+zip = "zip"
+
+[phases.start.nixPkgs]
+php = "php82"
+
+[phases.start.nixLibraries]
+libpng = "libpng"
+libjpeg = "libjpeg"
+freetype = "freetype"
+zip = "zip"

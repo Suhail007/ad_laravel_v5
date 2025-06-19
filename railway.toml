@@ -1,24 +1,19 @@
-# Railway configuration for Laravel
 [build]
-# Build command will run during the build phase
-buildCommand = "composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist"
+builder = "nixpacks"
+buildCommand = "echo 'Building with Nixpacks...'"
 
 [deploy]
-# Health check settings
+startCommand = "php artisan serve --host=0.0.0.0 --port=$PORT"
 healthcheckPath = "/health"
 healthcheckTimeout = 10
 
-# Start command is now in the Procfile
-startCommand = ""
-
 [env]
-# Basic Laravel configuration
 APP_ENV = "production"
 APP_DEBUG = "false"
 APP_KEY = "${APP_KEY}"
 APP_URL = "https://${RAILWAY_PUBLIC_DOMAIN}"
 
-# Database configuration (Railway will provide these)
+# Database configuration
 DB_CONNECTION = "mysql"
 DB_HOST = "${MYSQLHOST}"
 DB_PORT = "${MYSQLPORT}"
@@ -33,7 +28,4 @@ SESSION_LIFETIME = "120"
 
 # Logging
 LOG_CHANNEL = "stderr"
-LOG_LEVEL = "debug"
-
-# Queue (set to sync by default, can be changed to database/redis)
-QUEUE_CONNECTION = "sync" 
+LOG_LEVEL = "debug" 
