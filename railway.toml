@@ -6,7 +6,7 @@ buildCommand = "composer install --no-dev --optimize-autoloader --no-interaction
 
 [deploy]
 # Run migrations after deployment (uncomment after initial setup)
-# startCommand = "php artisan migrate --force"
+startCommand = "php artisan migrate --force"
 
 # Health check settings
 healthcheckPath = "/"
