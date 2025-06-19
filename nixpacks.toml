@@ -39,13 +39,8 @@ cmds = [
 # Build phase - prepare the application
 [phases.build]
 cmds = [
-    # Cache configuration and optimize
-    "php artisan config:cache",
-    "php artisan route:cache",
-    "php artisan view:cache",
-    
-    # Create storage link
-    "php artisan storage:link"
+    # Cache configuration and optimize - all in one command to avoid multiple layers
+    "php artisan config:cache && php artisan route:cache && php artisan view:cache && php artisan storage:link"
 ]
 
 # Start phase - run migrations and start the server
