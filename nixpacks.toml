@@ -1,5 +1,5 @@
 [nixpkgs]
-channel = "nixpkgs-unstable"
+channel = "nixpkgs-23.11"
 
 # System packages and setup
 [phases.setup]
@@ -22,13 +22,13 @@ nixPkgs = [
     "php82Extensions.opcache",
     "php82Extensions.sodium",
     "php82Extensions.exif",
+    "composer",
     "nodejs-18_x",
     "git"
 ]
 
 # System commands to run during setup
 cmds = [
-    "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer",
     "apt-get update",
     "apt-get install -y --no-install-recommends libpng-dev libjpeg-dev libfreetype6-dev libzip-dev unzip"
 ]
@@ -43,23 +43,23 @@ APP_KEY = "base64:ILW8+fwGf4vZ/zT999P0g5arvERKm02VCu+J3YyGCEo="
 [phases.install]
 cmds = [
     "composer install --no-interaction --optimize-autoloader --no-dev",
-    "[ -f .env ] || cp .env.example .env",
-    "grep -q '^APP_KEY=$' .env && php artisan key:generate --no-interaction || true"
+    "[ -f .env ] || cp .env.example .env"
 ]
 
 # Build phase - prepare the application
 [phases.build]
 cmds = [
-    "[ -f package.json ] && npm install && npm run build || true",
-    "php artisan config:cache",
-    "php artisan route:cache",
-    "php artisan view:cache",
-    "php artisan storage:link"
+    "[ -f package.json ] && npm install && npm run build || true"
 ]
 
 # Start phase - run migrations and start the server
 [phases.start]
 cmds = [
+    "grep -q '^APP_KEY=$' .env && php artisan key:generate --no-interaction || true",
+    "php artisan config:cache",
+    "php artisan route:cache",
+    "php artisan view:cache",
+    "php artisan storage:link",
     "php artisan migrate --force --no-interaction",
     "php artisan serve --host=0.0.0.0 --port=$PORT"
 ]
