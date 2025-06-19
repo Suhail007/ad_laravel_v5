@@ -1,11 +1,15 @@
 [build]
 builder = "nixpacks"
-buildCommand = "echo 'Building with Nixpacks...'"
 
 [deploy]
-startCommand = "php artisan serve --host=0.0.0.0 --port=$PORT"
+startCommand = ""
 healthcheckPath = "/health"
 healthcheckTimeout = 10
+
+# This ensures the web process defined in the Procfile is used
+[environments.production]
+  [environments.production.variables]
+    NIXPACKS_USE_RAILWAY_WEBSERVER = "true"
 
 [env]
 APP_ENV = "production"
