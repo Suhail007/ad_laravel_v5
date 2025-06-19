@@ -3,12 +3,19 @@
 # No need to specify builder for PHP applications
 
 [deploy]
-# Run migrations before starting the application
-preDeployCommand = "php artisan migrate --force"
+# Temporarily disable migrations during initial deployment
+# preDeployCommand = "php artisan migrate --force"
+
+# Add debug commands
+preDeployCommand = "echo 'Starting pre-deploy...' && php --version && composer --version"
 
 # Health check settings
 healthcheckPath = "/"
 healthcheckTimeout = 30
+
+# Add build commands to ensure proper setup
+[build.commands]
+build = "composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist"
 
 [env]
 # Basic Laravel configuration
