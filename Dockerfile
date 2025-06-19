@@ -29,9 +29,11 @@ COPY composer.json composer.lock ./
 RUN composer install --no-interaction --optimize-autoloader --no-dev
 
 # Copy asset dependency definitions
-COPY package.json package-lock.json ./
+COPY package.json package-lock.json* ./
+
 # Install and build assets
-RUN npm ci && npm run build
+RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
+RUN npm run build
 
 # Copy remaining application files
 COPY . .
