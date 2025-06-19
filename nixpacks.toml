@@ -1,41 +1,38 @@
 [phases.setup]
-  nixPkgs = ["libiconv", "libpng", "libjpeg", "libwebp", "zlib", "nodejs-16_x", "php82", "php82Extensions.curl", "php82Extensions.gd", "php82Extensions.mbstring", "php82Extensions.pdo_mysql", "php82Extensions.zip", "php82Extensions.xml", "php82Extensions.fileinfo"]
-  aptPkgs = ["git", "unzip", "libpng-dev", "libjpeg-dev", "libwebp-dev", "zlib1g-dev", "libzip-dev"]
+nixPkgs = ["libiconv", "libpng", "libjpeg", "libwebp", "zlib", "nodejs-16_x", "php82", "php82Extensions.curl", "php82Extensions.gd", "php82Extensions.mbstring", "php82Extensions.pdo_mysql", "php82Extensions.zip", "php82Extensions.xml", "php82Extensions.fileinfo"]
+aptPkgs = ["git", "unzip", "libpng-dev", "libjpeg-dev", "libwebp-dev", "zlib1g-dev", "libzip-dev"]
 
 [phases.install]
-  cmds = [
-    "composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist",
-    "php artisan storage:link",
-    "php artisan config:cache",
-    "php artisan route:cache",
-    "php artisan view:cache"
-  ]
+cmds = [
+  "composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist",
+  "php artisan storage:link",
+  "php artisan config:cache",
+  "php artisan route:cache",
+  "php artisan view:cache"
+]
 
 [phases.build]
-  cmds = [
-    "npm install",
-    "npm run build"
-  ]
+cmds = [
+  "npm install",
+  "npm run build"
+]
 
 [start]
-  cmd = "php artisan serve --host=0.0.0.0 --port=\${PORT}"
+cmd = "vendor/bin/heroku-php-apache2 public/"
 
 [environment]
-  NODE_ENV = "production"
-  NPM_CONFIG_PRODUCTION = "false"
-  APP_ENV = "production"
-  APP_DEBUG = "false"
-  LOG_CHANNEL = "stderr"
-  LOG_LEVEL = "info"
-  APP_URL = "https://${RAILWAY_PUBLIC_DOMAIN}"
-  ASSET_URL = "https://${RAILWAY_STATIC_URL}"
-
-[start]
-  cmd = "vendor/bin/heroku-php-apache2 public/"
+NODE_ENV = "production"
+NPM_CONFIG_PRODUCTION = "false"
+APP_ENV = "production"
+APP_DEBUG = "false"
+LOG_CHANNEL = "stderr"
+LOG_LEVEL = "info"
+APP_URL = "https://$RAILWAY_PUBLIC_DOMAIN"
+ASSET_URL = "https://$RAILWAY_STATIC_URL"
 
 [slice.assets]
-  stage = "build"
-  paths = ["public/build"]
+stage = "build"
+paths = ["public/build"]
 
 [slice.cache]
-  paths = ["storage/framework/views", "storage/framework/cache/data"]
+paths = ["storage/framework/views", "storage/framework/cache/data"]
