@@ -1,12 +1,10 @@
 [build]
-# Railway will automatically detect this is a PHP application
+# Use Railway's PHP buildpack
+builder = "heroku/buildpacks:20"
 
 [deploy]
 # Run migrations before starting the application
 preDeployCommand = "php artisan migrate --force"
-
-# Start the application
-startCommand = "php artisan serve --host=0.0.0.0 --port=$PORT"
 
 # Health check settings
 healthcheckPath = "/"
@@ -16,6 +14,7 @@ healthcheckTimeout = 30
 # Basic Laravel configuration
 APP_ENV = "production"
 APP_DEBUG = "false"
+APP_KEY = "${APP_KEY}"
 APP_URL = "https://${RAILWAY_PUBLIC_DOMAIN}"
 
 # Database configuration (Railway will provide these)
@@ -36,4 +35,13 @@ LOG_CHANNEL = "stderr"
 LOG_LEVEL = "info"
 
 # Queue (set to sync by default, can be changed to database/redis)
-QUEUE_CONNECTION = "sync" 
+QUEUE_CONNECTION = "sync"
+
+# Required PHP extensions
+PHP_EXTENSIONS = "bcmath ctype fileinfo json mbstring openssl pdo pdo_mysql tokenizer xml gd"
+
+# PHP settings
+PHP_INI_SCAN_DIR = "./php.ini"
+PHP_MEMORY_LIMIT = "256M"
+PHP_POST_MAX_SIZE = "100M"
+PHP_UPLOAD_MAX_FILESIZE = "100M" 
