@@ -1,6 +1,6 @@
 [build]
-# Use Railway's PHP buildpack
-builder = "heroku/buildpacks:20"
+# Railway will automatically detect this is a PHP application
+# No need to specify builder for PHP applications
 
 [deploy]
 # Run migrations before starting the application
