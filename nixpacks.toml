@@ -26,17 +26,23 @@ cmds = [
     "apt-get install -y --no-install-recommends libpng-dev libjpeg-dev libfreetype6-dev libzip-dev unzip"
 ]
 
-# Build phase - install dependencies and build assets
-[phases.build]
+# Install phase - install dependencies
+[phases.install]
 cmds = [
-    # Install PHP dependencies
+    # Install PHP dependencies first
     "composer install --no-interaction --optimize-autoloader --no-dev",
     
-    # Install Node.js dependencies and build assets if package.json exists
-    "if [ -f package.json ]; then npm install && npm run build; fi",
-    
+    # Install Node.js dependencies if package.json exists
+    "if [ -f package.json ]; then npm install && npm run build; fi"
+]
+
+# Build phase - prepare the application
+[phases.build]
+cmds = [
     # Cache configuration and optimize
-    "php artisan config:cache && php artisan route:cache && php artisan view:cache",
+    "php artisan config:cache",
+    "php artisan route:cache",
+    "php artisan view:cache",
     
     # Create storage link
     "php artisan storage:link"
@@ -44,7 +50,10 @@ cmds = [
 
 # Start phase - run migrations and start the server
 [phases.start]
-cmds = ["sh -c 'php artisan migrate --force --no-interaction && php artisan serve --host=0.0.0.0 --port=$PORT'"]
+cmds = [
+    "sh -c 'php artisan migrate --force --no-interaction'",
+    "php artisan serve --host=0.0.0.0 --port=$PORT"
+]
 
 # Add a health check
 [phases.healthcheck]
