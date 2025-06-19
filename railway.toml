@@ -1,12 +1,15 @@
 # Use Railway's built-in PHP environment instead of Nixpacks
 [build]
-builder = "nixpacks"
+# Use the Dockerfile in the root of the repository
+builder = "dockerfile"
 
 # Deploy configuration
 [deploy]
-startCommand = "php artisan serve --host=0.0.0.0 --port=$PORT"
+# The command to run after the build is complete
+startCommand = "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT"
 healthcheckPath = "/health"
-healthcheckTimeout = 10
+healthcheckTimeout = 120
+healthcheckInterval = 15
 
 # Environment variables
 [environments]
