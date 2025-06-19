@@ -1,22 +1,29 @@
-# Nixpacks configuration for Laravel
+# N[nixpkgs]
+channel = "nixpkgs-unstable"
 
 # System packages required for build
+[phases.setup]
 nixPkgs = [
     "php82",
-    "composer",
-    "nodejs-18_x",
     "php82Extensions.curl",
     "php82Extensions.gd",
     "php82Extensions.mbstring",
-    "php82Extensions.zip"
-]
-
-# System libraries required for build
-nixLibraries = [
-    "libpng",
-    "libjpeg",
-    "freetype",
-    "zip"
+    "php82Extensions.zip",
+    "php82Extensions.xml",
+    "php82Extensions.fileinfo",
+    "php82Extensions.openssl",
+    "php82Extensions.pdo_mysql",
+    "php82Extensions.tokenizer",
+    "php82Extensions.simplexml",
+    "php82Extensions.xmlwriter",
+    "php82Extensions.mysqlnd",
+    "php82Extensions.bcmath",
+    "php82Extensions.opcache",
+    "php82Extensions.sodium",
+    "php82Extensions.exif",
+    "composer",
+    "nodejs-18_x",
+    "git"
 ]
 
 # Setup phase - install system dependencies
@@ -39,17 +46,17 @@ cmds = [
     "composer install --no-interaction --optimize-autoloader --no-dev",
     
     # Create .env if it doesn't exist
-    "php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
+    "[ -f .env ] || cp .env.example .env",
     
     # Generate application key if not set
-    "php artisan key:generate --force"
+    "grep -q '^APP_KEY=$' .env && php artisan key:generate --no-interaction || true"
 ]
 
 # Build phase - prepare the application
 [phases.build]
 cmds = [
-    # Install Node.js dependencies if package.json exists
-    "if [ -f package.json ]; then npm install && npm run build; fi",
+    # Build assets if package.json exists
+    "[ -f package.json ] && npm install && npm run build || true",
     
     # Cache configuration
     "php artisan config:cache",
@@ -62,12 +69,12 @@ cmds = [
 [phases.start]
 cmds = [
     # Run migrations and start the server in the same process
-    "sh -c 'php artisan migrate --force --no-interaction && php artisan serve --host=0.0.0.0 --port=$PORT'"
+    "php artisan migrate --force --no-interaction",
+    "php artisan serve --host=0.0.0.0 --port=$PORT"
 ]
 
 # Add a health check
-[phases.healthcheck]
-type = "http"
+[statics.healthcheck]
 path = "/health"
 initialDelay = 30
-timeout = 5
+timeout = 105
