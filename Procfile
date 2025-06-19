@@ -4,4 +4,5 @@ release: |
   php artisan route:cache
   php artisan view:cache
   php artisan storage:link
-  php artisan migrate --force
+  php artisan migrate --force --no-interaction
+  php artisan optimize

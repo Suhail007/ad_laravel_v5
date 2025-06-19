@@ -6,29 +6,21 @@ cmds = [
 
 [phases.build]
 cmds = [
-    "composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist",
-    # Skip database-related commands during build
-    "php -r \"file_put_contents('.env', str_replace('DB_CONNECTION=mysql', 'DB_CONNECTION=sqlite', file_get_contents('.env')));\"",
-    "php artisan config:cache",
-    "php artisan route:cache",
-    "php artisan view:cache",
-    "php artisan storage:link"
+    "composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist"
 ]
 
 [phases.start]
-cmds = ["php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=$PORT"]
+cmds = ["php artisan migrate --force --no-interaction && php artisan serve --host=0.0.0.0 --port=$PORT"]
 
 [phases.install]
-cmds = ["echo 'Skipping install phase'"]
+cmds = ["echo 'Installing dependencies...'"]
 
-# Required system packages
-[phases.build.nixPkgs]
+[phases.setup.nixPkgs]
 php82 = {}
 composer = {}
 nodejs-18_x = {}
 
-# Required libraries
-[phases.build.nixLibraries]
+[phases.setup.nixLibraries]
 libpng = {}
 libjpeg = {}
 freetype = {}
