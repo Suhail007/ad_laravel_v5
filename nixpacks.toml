@@ -1,5 +1,24 @@
 # Nixpacks configuration for Laravel
 
+# System packages required for build
+nixPkgs = [
+    "php82",
+    "composer",
+    "nodejs-18_x",
+    "php82Extensions.curl",
+    "php82Extensions.gd",
+    "php82Extensions.mbstring",
+    "php82Extensions.zip"
+]
+
+# System libraries required for build
+nixLibraries = [
+    "libpng",
+    "libjpeg",
+    "freetype",
+    "zip"
+]
+
 # Setup phase - install system dependencies
 [phases.setup]
 cmds = [
@@ -7,29 +26,31 @@ cmds = [
     "apt-get install -y --no-install-recommends libpng-dev libjpeg-dev libfreetype6-dev libzip-dev unzip"
 ]
 
-# Build phase - install PHP dependencies
+# Build phase - install dependencies and build assets
 [phases.build]
 cmds = [
-    "composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist",
+    # Install PHP dependencies
+    "composer install --no-interaction --optimize-autoloader --no-dev",
+    
+    # Install Node.js dependencies and build assets if package.json exists
+    "if [ -f package.json ]; then npm install && npm run build; fi",
+    
+    # Cache configuration
     "php artisan config:cache",
     "php artisan route:cache",
     "php artisan view:cache",
+    
+    # Create storage link
     "php artisan storage:link"
 ]
 
 # Start phase - run migrations and start the server
 [phases.start]
-cmds = ["php artisan migrate --force --no-interaction && php artisan serve --host=0.0.0.0 --port=$PORT"]
+cmds = ["sh -c 'php artisan migrate --force --no-interaction && php artisan serve --host=0.0.0.0 --port=$PORT'"]
 
-# System packages required for build
-[phases.setup.nixPkgs]
-php82 = {}
-composer = {}
-nodejs-18_x = {}
-
-# System libraries required for build
-[phases.setup.nixLibraries]
-libpng = {}
-libjpeg = {}
-freetype = {}
-zip = {}
+# Add a health check
+[phases.healthcheck]
+type = "http"
+path = "/health"
+initialDelay = 30
+timeout = 5
