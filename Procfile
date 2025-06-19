@@ -5,4 +5,3 @@ release: |
   php artisan view:cache
   php artisan storage:link
   php artisan migrate --force --no-interaction
-  php artisan optimize
