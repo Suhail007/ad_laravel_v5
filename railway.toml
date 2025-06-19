@@ -1,10 +1,6 @@
-# Force Nixpacks builder and disable Docker
+# Use Railway's built-in PHP environment instead of Nixpacks
 [build]
 builder = "nixpacks"
-
-# Explicitly set the build command
-[build.uses]
-provider = "nixpacks"
 
 # Deploy configuration
 [deploy]
@@ -36,7 +32,4 @@ healthcheckTimeout = 10
     # Session and cache
     CACHE_DRIVER = "file"
     SESSION_DRIVER = "file"
-    SESSION_LIFETIME = "120"
-    
-    # Force Nixpacks
-    NIXPACKS_USE_RAILWAY_WEBSERVER = "true" 
+    SESSION_LIFETIME = "120" 
