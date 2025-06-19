@@ -2,11 +2,11 @@
 web: vendor/bin/heroku-php-apache2 public/
 
 # Release command (runs on every deploy)
-release: \
-  php artisan config:cache && \
-  php artisan route:cache && \
-  php artisan view:cache && \
-  php artisan storage:link
+release: |
+  /app/.heroku/php/bin/php artisan config:cache
+  /app/.heroku/php/bin/php artisan route:cache
+  /app/.heroku/php/bin/php artisan view:cache
+  /app/.heroku/php/bin/php artisan storage:link
 
 # Uncomment after initial deployment
-# release: php artisan migrate --force
+# /app/.heroku/php/bin/php artisan migrate --force

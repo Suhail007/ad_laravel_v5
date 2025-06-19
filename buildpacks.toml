@@ -1,0 +1,5 @@
+# Use Heroku PHP buildpacks for better Laravel support
+[[buildpacks]]
+  id = "heroku/php"
+  version = "0.17.0"  # Use a stable version
+  uri = "https://buildpacks.herokuapp.com/heroku/php.tgz"
