@@ -1,6 +1,7 @@
 [build]
 # Railway will automatically detect this is a PHP application
-# No need to specify builder for PHP applications
+# Build command will run during the build phase
+buildCommand = "composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist"
 
 [deploy]
 # Temporarily disable migrations during initial deployment
@@ -13,9 +14,6 @@ preDeployCommand = "echo 'Starting pre-deploy...' && php --version && composer -
 healthcheckPath = "/"
 healthcheckTimeout = 30
 
-# Add build commands to ensure proper setup
-[build.commands]
-build = "composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist"
 
 [env]
 # Basic Laravel configuration
