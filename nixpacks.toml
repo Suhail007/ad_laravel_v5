@@ -1,8 +1,9 @@
-# N[nixpkgs]
+[nixpkgs]
 channel = "nixpkgs-unstable"
 
-# System packages required for build
+# System packages and setup
 [phases.setup]
+# Nix packages to install
 nixPkgs = [
     "php82",
     "php82Extensions.curl",
@@ -26,8 +27,7 @@ nixPkgs = [
     "git"
 ]
 
-# Setup phase - install system dependencies
-[phases.setup]
+# System commands to run during setup
 cmds = [
     "apt-get update",
     "apt-get install -y --no-install-recommends libpng-dev libjpeg-dev libfreetype6-dev libzip-dev unzip"
