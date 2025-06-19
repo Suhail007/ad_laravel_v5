@@ -1,0 +1,30 @@
+[phases.setup]
+  apt_pkgs = ["git", "unzip"]
+  nixPkgs = ["libiconv", "libpng", "libjpeg", "libwebp", "zlib"]
+
+[phases.setup]
+  cmds = [
+    "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer",
+  ]
+
+[phases.install]
+  cmds = [
+    "composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader",
+    "php artisan storage:link",
+    "php artisan optimize"
+  ]
+
+[phases.build]
+  cmds = [
+    "npm install && npm run prod",
+  ]
+
+[start]
+  cmd = "vendor/bin/heroku-php-apache2 public/"
+
+[slice.assets]
+  stage = "build"
+  paths = ["public/build"]
+
+[slice.cache]
+  paths = ["storage/framework/views", "storage/framework/cache/data"]
