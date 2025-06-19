@@ -26,18 +26,24 @@ cmds = [
     "apt-get install -y --no-install-recommends libpng-dev libjpeg-dev libfreetype6-dev libzip-dev unzip"
 ]
 
-# Install phase - install dependencies
-[phases.install]
-cmds = [
-    # Install PHP dependencies first
-    "composer install --no-interaction --optimize-autoloader --no-dev"
-]
-
 # Setup environment variables if not set
 [phases.setup.environment]
 APP_ENV = "production"
 APP_DEBUG = "false"
 APP_KEY = "base64:ILW8+fwGf4vZ/zT999P0g5arvERKm02VCu+J3YyGCEo="
+
+# Install phase - install dependencies
+[phases.install]
+cmds = [
+    # Install PHP dependencies first with optimized autoloader
+    "composer install --no-interaction --optimize-autoloader --no-dev",
+    
+    # Create .env if it doesn't exist
+    "php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
+    
+    # Generate application key if not set
+    "php artisan key:generate --force"
+]
 
 # Build phase - prepare the application
 [phases.build]
@@ -45,11 +51,7 @@ cmds = [
     # Install Node.js dependencies if package.json exists
     "if [ -f package.json ]; then npm install && npm run build; fi",
     
-    # Create .env if it doesn't exist
-    "php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
-    
-    # Set up application
-    "php artisan key:generate --force",
+    # Cache configuration
     "php artisan config:cache",
     "php artisan route:cache",
     "php artisan view:cache",
@@ -59,8 +61,8 @@ cmds = [
 # Start phase - run migrations and start the server
 [phases.start]
 cmds = [
-    "php artisan migrate --force --no-interaction",
-    "php artisan serve --host=0.0.0.0 --port=$PORT"
+    # Run migrations and start the server in the same process
+    "sh -c 'php artisan migrate --force --no-interaction && php artisan serve --host=0.0.0.0 --port=$PORT'"
 ]
 
 # Add a health check
