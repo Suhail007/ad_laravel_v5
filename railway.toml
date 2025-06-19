@@ -1,28 +1,39 @@
 [build]
-builder = "DOCKERFILE"
-dockerfilePath = "Dockerfile"
+# Railway will automatically detect this is a PHP application
 
 [deploy]
+# Run migrations before starting the application
 preDeployCommand = "php artisan migrate --force"
+
+# Start the application
 startCommand = "php artisan serve --host=0.0.0.0 --port=$PORT"
+
+# Health check settings
 healthcheckPath = "/"
-healthcheckTimeout = 100
-restartPolicyType = "ON_FAILURE"
-restartPolicyMaxRetries = 10
+healthcheckTimeout = 30
 
 [env]
+# Basic Laravel configuration
 APP_ENV = "production"
 APP_DEBUG = "false"
-CACHE_DRIVER = "redis"
-QUEUE_CONNECTION = "redis"
-SESSION_DRIVER = "redis"
+APP_URL = "https://${RAILWAY_PUBLIC_DOMAIN}"
+
+# Database configuration (Railway will provide these)
+DB_CONNECTION = "mysql"
+DB_HOST = "${MYSQLHOST}"
+DB_PORT = "${MYSQLPORT}"
+DB_DATABASE = "${MYSQLDATABASE}"
+DB_USERNAME = "${MYSQLUSER}"
+DB_PASSWORD = "${MYSQLPASSWORD}"
+
+# Session and cache
+CACHE_DRIVER = "file"
+SESSION_DRIVER = "file"
+SESSION_LIFETIME = "120"
+
+# Logging
 LOG_CHANNEL = "stderr"
+LOG_LEVEL = "info"
 
-[[services]]
-name = "web"
-envs = ["PORT"]
-
-[[services]]
-name = "queue"
-command = "php artisan queue:work redis --tries=3 --max-time=3600"
-envs = ["PORT"] 
+# Queue (set to sync by default, can be changed to database/redis)
+QUEUE_CONNECTION = "sync" 
