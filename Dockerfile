@@ -9,6 +9,7 @@ RUN apk add --no-cache \
     curl \
     git \
     libpng-dev \
+    zlib-dev \
     libzip-dev \
     oniguruma-dev \
     zip \
@@ -37,8 +38,12 @@ FROM php:8.2-cli-alpine3.18
 
 WORKDIR /app
 
-# Install runtime dependencies for PHP extensions
-RUN apk add --no-cache libpng libzip
+# Install runtime dependencies and dev packages for extensions
+RUN apk add --no-cache \
+    libpng-dev \
+    zlib-dev \
+    libzip-dev \
+    oniguruma-dev
 
 # Install PHP extensions required for runtime
 RUN docker-php-ext-install pdo_mysql exif pcntl bcmath gd zip
