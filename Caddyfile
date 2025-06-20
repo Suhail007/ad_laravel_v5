@@ -9,9 +9,12 @@
     # Set the root directory to Laravel's public folder.
     root * /app/public
 
+    # Add the standard Laravel URL rewriting rule.
+    # This sends all non-file requests to index.php.
+    php_fastcgi localhost:9000 {
+        try_files {path} {path}/ /index.php?{query}
+    }
+
     # Enable serving of static files.
     file_server
-
-    # Proxy all PHP requests to the PHP-FPM service running in the same container.
-    php_fastcgi localhost:9000
 } 
