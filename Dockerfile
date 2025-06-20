@@ -29,6 +29,9 @@ COPY . .
 # Install composer dependencies
 RUN composer install --no-interaction --optimize-autoloader --no-dev
 
+# Create a dummy sqlite file for the build process
+RUN mkdir -p database && touch database/database.sqlite
+
 # Clear any cached configuration now that dependencies are installed
 RUN php artisan config:clear
 RUN php artisan cache:clear
