@@ -1,0 +1,17 @@
+{
+    # Tell Caddy which port to listen on. Railway will automatically
+    # route external traffic (port 80/443) to this port.
+    http_port 8080
+}
+
+# Serve the site on the configured port.
+:8080 {
+    # Set the root directory to Laravel's public folder.
+    root * /app/public
+
+    # Enable serving of static files.
+    file_server
+
+    # Proxy all PHP requests to the PHP-FPM service.
+    php_fastcgi php-fpm:9000
+} 
