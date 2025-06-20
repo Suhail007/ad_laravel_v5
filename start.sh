@@ -8,6 +8,7 @@ set -m
 
 # Run essential Laravel optimizations for production.
 echo "Running Laravel optimizations..."
+php artisan migrate --force
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
