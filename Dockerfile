@@ -26,6 +26,10 @@ COPY --from=composer:2.5 /usr/bin/composer /usr/bin/composer
 # Copy the entire application source code
 COPY . .
 
+# Clear any cached configuration
+RUN php artisan config:clear
+RUN php artisan cache:clear
+
 # Install composer dependencies
 RUN composer install --no-interaction --optimize-autoloader --no-dev
 
