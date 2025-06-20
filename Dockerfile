@@ -34,7 +34,7 @@ RUN mkdir -p database && touch database/database.sqlite
 
 # Clear any cached configuration now that dependencies are installed
 RUN php artisan config:clear
-RUN php artisan cache:clear
+RUN CACHE_DRIVER=file php artisan cache:clear
 
 # Install and build assets
 RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
