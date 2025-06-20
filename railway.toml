@@ -1,12 +1,13 @@
 # Use Railway's built-in PHP environment instead of Nixpacks
 [build]
-# Use the Dockerfile in the root of the repository
+# Use the Dockerfile in the root of the repository.
+# Railway will automatically detect the port exposed by Caddy.
 builder = "dockerfile"
 
 # Deploy configuration
 [deploy]
-# The command to run after the build is complete
-startCommand = "php artisan serve --host=0.0.0.0 --port=$PORT"
+# The start command is now handled by the Dockerfile's CMD.
+# We just need to define the healthcheck path.
 healthcheckPath = "/health"
 healthcheckTimeout = 120
 healthcheckInterval = 15
