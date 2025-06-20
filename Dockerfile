@@ -26,12 +26,12 @@ COPY --from=composer:2.5 /usr/bin/composer /usr/bin/composer
 # Copy the entire application source code
 COPY . .
 
-# Clear any cached configuration
-RUN php artisan config:clear
-RUN php artisan cache:clear
-
 # Install composer dependencies
 RUN composer install --no-interaction --optimize-autoloader --no-dev
+
+# Clear any cached configuration now that dependencies are installed
+RUN php artisan config:clear
+RUN php artisan cache:clear
 
 # Install and build assets
 RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
