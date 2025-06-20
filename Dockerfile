@@ -37,7 +37,11 @@ FROM php:8.2-cli-alpine3.18
 
 WORKDIR /app
 
+# Install runtime dependencies for PHP extensions
 RUN apk add --no-cache libpng libzip
+
+# Install PHP extensions required for runtime
+RUN docker-php-ext-install pdo_mysql exif pcntl bcmath gd zip
 
 # Copy application files and dependencies from builder stage
 COPY --from=builder /app .
